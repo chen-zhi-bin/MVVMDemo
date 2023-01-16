@@ -9,8 +9,8 @@ class OnSellActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_onsell)
-        val viewModel:RecommendViewModel = ViewModelProvider(this).get(RecommendViewModel::class.java)
-
+        val viewModel:OnSellViewModel = ViewModelProvider(this).get(OnSellViewModel::class.java)
+        viewModel.loadContent()
     }
 
 }
