@@ -3,10 +3,13 @@ package com.program.mvvmdemo.taobao
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.program.mvvmdemo.domain.OnSellData
+import com.program.mvvmdemo.taobao.domain.OnSellData
 import kotlinx.coroutines.launch
 
 class OnSellViewModel:ViewModel() {
+
+    val contentList = MutableLiveData<List<OnSellData.TbkDgOptimusMaterialResponse.ResultList.MapData>>()
+
 
     private val onSellRepository by lazy {
         OnSellRepository()
@@ -38,9 +41,9 @@ class OnSellViewModel:ViewModel() {
         viewModelScope.launch {
             val onSellList:OnSellData = onSellRepository.getOnSellList(page)
             println("result size =="+onSellList.tbk_dg_optimus_material_response.result_list.map_data.size)
+            contentList.value = onSellList.tbk_dg_optimus_material_response.result_list.map_data
         }
     }
 
-    val contentList = MutableLiveData<MutableList<String>>()
 
 }

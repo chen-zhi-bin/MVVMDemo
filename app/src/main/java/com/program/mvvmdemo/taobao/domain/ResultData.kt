@@ -1,6 +1,6 @@
-package com.program.mvvmdemo.domain
+package com.program.mvvmdemo.taobao.domain
 
-import com.program.mvvmdemo.api.ApiException
+import com.program.mvvmdemo.taobao.api.ApiException
 
 data class ResultData<T>(val success:Boolean,
 val code:Int,

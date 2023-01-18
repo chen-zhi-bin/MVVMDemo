@@ -1,6 +1,6 @@
 package com.program.mvvmdemo.taobao
 
-import com.program.mvvmdemo.api.RetrofitClient
+import com.program.mvvmdemo.taobao.api.RetrofitClient
 
 class OnSellRepository {
 
