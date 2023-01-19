@@ -7,10 +7,32 @@
     tools:context=".taobao.OnSellActivity">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:background="#dfdfdf"
-        android:layout_width="match_parent"
         android:id="@+id/contentListRv"
-        android:overScrollMode="never"
-        android:layout_height="match_parent"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#dfdfdf"
+        android:visibility="gone"
+        android:overScrollMode="never" />
+
+    <include
+        android:id="@+id/emptyView"
+        layout="@layout/activity_on_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/loadingView"
+        layout="@layout/activity_on_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <include
+        android:id="@+id/errorView"
+        layout="@layout/activity_on_error"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

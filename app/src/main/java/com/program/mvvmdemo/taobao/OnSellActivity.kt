@@ -8,9 +8,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.lcodecore.tkrefreshlayout.footer.LoadingView
 import com.program.mvvmdemo.R
+import com.program.mvvmdemo.base.LoadState
 import com.program.mvvmdemo.taobao.adapter.OnSellListAdapter
 import com.program.mvvmdemo.utils.SizeUtils
+import kotlinx.android.synthetic.main.activity_on_error.*
 import kotlinx.android.synthetic.main.activity_onsell.*
 
 class OnSellActivity : AppCompatActivity() {
@@ -42,6 +45,25 @@ class OnSellActivity : AppCompatActivity() {
                 //跟新适配器
                 mAdapter.setData(it)
             })
+            loadState.observe(this@OnSellActivity, Observer {
+                //根据加载的状态来更新UI显示
+                hideAll()
+                println(it)
+                when (it) {
+                    LoadState.LOADING -> {
+                        loadingView.visibility = View.VISIBLE
+                    }
+                    LoadState.EMPTY -> {
+                        emptyView.visibility = View.VISIBLE
+                    }
+                    LoadState.ERROR -> {
+                        errorView.visibility = View.VISIBLE
+                    }
+                    LoadState.SUCCESS -> {
+                        contentListRv.visibility = View.VISIBLE
+                    }
+                }
+            })
         }.loadContent()
     }
 
@@ -49,6 +71,10 @@ class OnSellActivity : AppCompatActivity() {
      * 初始化view
      */
     private fun initView() {
+        reloadLL.setOnClickListener {
+            //重新加载
+            mViewModel.loadContent()
+        }
         contentListRv.run {
             layoutManager = LinearLayoutManager(this@OnSellActivity)
             adapter =mAdapter
@@ -72,6 +98,13 @@ class OnSellActivity : AppCompatActivity() {
                 }
             )
         }
+    }
+
+    private fun hideAll(){
+        contentListRv.visibility=View.GONE
+        emptyView.visibility=View.GONE
+        loadingView.visibility=View.GONE
+        errorView.visibility=View.GONE
     }
 
 }
