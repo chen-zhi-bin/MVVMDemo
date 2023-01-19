@@ -7,8 +7,10 @@
     tools:context=".taobao.OnSellActivity">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:background="#dfdfdf"
         android:layout_width="match_parent"
         android:id="@+id/contentListRv"
+        android:overScrollMode="never"
         android:layout_height="match_parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,12 +1,16 @@
 package com.program.mvvmdemo.taobao
 
+import android.graphics.Rect
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.program.mvvmdemo.R
 import com.program.mvvmdemo.taobao.adapter.OnSellListAdapter
+import com.program.mvvmdemo.utils.SizeUtils
 import kotlinx.android.synthetic.main.activity_onsell.*
 
 class OnSellActivity : AppCompatActivity() {
@@ -48,6 +52,25 @@ class OnSellActivity : AppCompatActivity() {
         contentListRv.run {
             layoutManager = LinearLayoutManager(this@OnSellActivity)
             adapter =mAdapter
+            addItemDecoration(
+                object : RecyclerView.ItemDecoration(){
+                    override fun getItemOffsets(
+                        outRect: Rect,
+                        view: View,
+                        parent: RecyclerView,
+                        state: RecyclerView.State
+                    ) {
+                        outRect.apply {
+                            val padding:Int = SizeUtils.dip2px(this@OnSellActivity,4.0f)
+                            top = padding
+                            left = padding
+                            bottom = padding
+                            right = padding
+                        }
+
+                    }
+                }
+            )
         }
     }
 
