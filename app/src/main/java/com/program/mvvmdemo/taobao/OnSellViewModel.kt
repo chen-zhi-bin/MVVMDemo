@@ -42,6 +42,14 @@ class OnSellViewModel:ViewModel() {
     }
 
     /**
+     * 如果viewmodel需要清空数据就复写此方法
+     */
+    override fun onCleared() {
+        super.onCleared()
+
+    }
+
+    /**
      * 加载首页内容
      */
     fun loadContent(){
