@@ -11,7 +11,7 @@ import java.lang.NullPointerException
 
 class OnSellViewModel:ViewModel() {
 
-    val contentList = MutableLiveData<List<OnSellData.TbkDgOptimusMaterialResponse.ResultList.MapData>>()
+    val contentList = MutableLiveData<MutableList<OnSellData.TbkDgOptimusMaterialResponse.ResultList.MapData>>()
 
     val loadState = MutableLiveData<LoadState>()
 
@@ -27,38 +27,51 @@ class OnSellViewModel:ViewModel() {
         const val DEFAULT_PAGE = 1
     }
 
+    private var isLoaderMore = false
+
     /**
      * 加载更多
      */
     fun loaderMore(){
-
+        isLoaderMore = true
+        println("loadMore")
+        loadState.value = LoadState.LOADER_MORE_LOADING
+        //加载更多内容
+        mCurrentPage++
+        this.listContentByPage(mCurrentPage)
     }
 
     /**
      * 加载首页内容
      */
     fun loadContent(){
+        isLoaderMore =false
+        loadState.value = LoadState.LOADING
         this.listContentByPage(mCurrentPage)
     }
 
     private fun listContentByPage(page:Int){
-        loadState.value = LoadState.LOADING
         viewModelScope.launch {
             try {
                 val onSellList:OnSellData = onSellRepository.getOnSellList(page)
+                val oldValue = contentList.value?: mutableListOf()
                 println("result size =="+onSellList.tbk_dg_optimus_material_response.result_list.map_data.size)
-                contentList.value = onSellList.tbk_dg_optimus_material_response.result_list.map_data
+                oldValue.addAll(onSellList.tbk_dg_optimus_material_response.result_list.map_data)
+                contentList.value=oldValue
                 if (onSellList.tbk_dg_optimus_material_response.result_list.map_data.isEmpty()) {
-                    loadState.value=LoadState.EMPTY
+                    mCurrentPage--
+                    loadState.value=if (isLoaderMore)LoadState.LOADER_MORE_EMPTY else LoadState.EMPTY
                 }else{
                     loadState.value=LoadState.SUCCESS
                 }
             }catch (e:Exception){
+                mCurrentPage--
                 e.printStackTrace()
                 if (e is NullPointerException) {
-                    //todo:没有更多内容的时候，会有一个空指针
+                    //没有更多内容的时候，会有一个空指针
+                    loadState.value = LoadState.LOADER_MORE_EMPTY
                 }else{
-                    loadState.value = LoadState.ERROR
+                    loadState.value = if (isLoaderMore)LoadState.LOADER_MORE_ERROR else LoadState.ERROR
                 }
 
             }

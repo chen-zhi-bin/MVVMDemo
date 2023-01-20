@@ -4,10 +4,13 @@ import android.graphics.Rect
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
 import com.lcodecore.tkrefreshlayout.footer.LoadingView
 import com.program.mvvmdemo.R
 import com.program.mvvmdemo.base.LoadState
@@ -59,8 +62,17 @@ class OnSellActivity : AppCompatActivity() {
                     LoadState.ERROR -> {
                         errorView.visibility = View.VISIBLE
                     }
-                    LoadState.SUCCESS -> {
-                        contentListRv.visibility = View.VISIBLE
+                    else ->{
+                        contentRefreshView.visibility = View.VISIBLE
+                        contentRefreshView.finishLoadmore()
+                    }
+                }
+                when(it){
+                    LoadState.LOADER_MORE_ERROR -> {
+                        Toast.makeText(this@OnSellActivity,"网络不佳，请稍后重试",Toast.LENGTH_SHORT).show()
+                    }
+                    LoadState.LOADER_MORE_EMPTY -> {
+                        Toast.makeText(this@OnSellActivity,"已经加载全部内容",Toast.LENGTH_SHORT).show()
                     }
                 }
             })
@@ -71,6 +83,18 @@ class OnSellActivity : AppCompatActivity() {
      * 初始化view
      */
     private fun initView() {
+        contentRefreshView.run {
+            setEnableLoadmore(true)
+            setEnableRefresh(false)
+            setEnableOverScroll(true)
+            setOnRefreshListener(object : RefreshListenerAdapter(){
+                override fun onLoadMore(refreshLayout: TwinklingRefreshLayout?) {
+                    super.onLoadMore(refreshLayout)
+                    //开始去执行加载更多
+                    mViewModel.loaderMore()
+                }
+            })
+        }
         reloadLL.setOnClickListener {
             //重新加载
             mViewModel.loadContent()
@@ -101,7 +125,7 @@ class OnSellActivity : AppCompatActivity() {
     }
 
     private fun hideAll(){
-        contentListRv.visibility=View.GONE
+        contentRefreshView.visibility=View.GONE
         emptyView.visibility=View.GONE
         loadingView.visibility=View.GONE
         errorView.visibility=View.GONE
